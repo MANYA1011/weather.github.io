@@ -1,7 +1,47 @@
 const cityInput = document.querySelector(".city-input");
 const searchButton = document.querySelector(".search-btn");
 const locationButton = document.querySelector(".location-btn");
-const currentWeatherDiv = document.querySelector(".current-weather");
+const currentWeatherDiv = document.querySelector(".current-weather");const url =
+	'https://api.openweathermap.org/data/2.5/weather';
+const apiKey =
+	'dab5120fc499d10f28f5742bcf64ce1e';
+
+$(document).ready(function () {
+	weatherFn('Pune');
+});
+
+async function weatherFn(cName) {
+	const temp =
+		`${url}?q=${cName}&appid=${apiKey}&units=metric`;
+	try {
+		const res = await fetch(temp);
+		const data = await res.json();
+		if (res.ok) {
+			weatherShowFn(data);
+		} else {
+			alert('City not found. Please try again.');
+		}
+	} catch (error) {
+		console.error('Error fetching weather data:', error);
+	}
+}
+
+function weatherShowFn(data) {
+	$('#city-name').text(data.name);
+	$('#date').text(moment().
+		format('MMMM Do YYYY, h:mm:ss a'));
+	$('#temperature').
+		html(`${data.main.temp}°C`);
+	$('#description').
+		text(data.weather[0].description);
+	$('#wind-speed').
+		html(`Wind Speed: ${data.wind.speed} m/s`);
+	$('#weather-icon').
+		attr('src',
+			`...`);
+	$('#weather-info').fadeIn();
+}
+
 const weatherCardsDiv = document.querySelector(".weather-cards");
 
 const API_KEY = "YOUR-API-KEY-HERE"; // API key for OpenWeatherMap API
